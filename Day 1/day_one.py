@@ -17,16 +17,26 @@ def sum_list(my_list: list) -> int:
     return sum(int(entry) for entry in my_list)
 
 
+def sum_highest_values(my_list: list, number_of_values: int = 1) -> int:
+    """
+    Returns sum of highest values in a list
+    number_of_values is number of values to consider
+    Default is to return single highest value
+    """
+    return sum(sorted(my_list)[-number_of_values:])
+
+
 def main():  # pylint:disable=missing-function-docstring
     food_items_by_elf = process_input(puzzle_input)
     calories_by_elf = summarise_entries(food_items_by_elf)
-    calories_by_elf.sort()
 
     # ANSWER TO PART 1
-    print(calories_by_elf[-1])
+    part_one = sum_highest_values(calories_by_elf, 1)
+    print(part_one)
 
     # ANSWER TO PART 2
-    print(sum(calories_by_elf[-3:]))
+    part_two = sum_highest_values(calories_by_elf, 3)
+    print(part_two)
 
 
 if __name__ == "__main__":
