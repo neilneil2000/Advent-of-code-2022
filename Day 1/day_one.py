@@ -19,29 +19,26 @@ def split_list_by_blank_strings(input_list: list) -> list:
     return output_list
 
 
-def sum_sub_lists(lists: list) -> list:
+def summarise_entries(lists: list) -> list:
     """Takes a 2D array and computes the sum on each sublist"""
-    totals = []
-    temp_sum = 0
-    for entry in lists:
-        for number in entry:
-            temp_sum += int(number)
-        totals.append(temp_sum)
-        temp_sum = 0
-    return totals
+    return [sum_list(entry) for entry in lists]
+
+
+def sum_list(my_list: list) -> int:
+    """Returns integer sum of values in list"""
+    return sum(int(entry) for entry in my_list)
 
 
 def main():  # pylint:disable=missing-function-docstring
-    input_list = puzzle_input.splitlines()
-    split_list = split_list_by_blank_strings(input_list)
-    summary_list = sum_sub_lists(split_list)
-    summary_list.sort()
+    food_items_by_elf = split_list_by_blank_strings(puzzle_input.splitlines())
+    calories_by_elf = summarise_entries(food_items_by_elf)
+    calories_by_elf.sort()
 
     # ANSWER TO PART 1
-    print(summary_list[-1])
+    print(calories_by_elf[-1])
 
     # ANSWER TO PART 2
-    print(sum(summary_list[-3:]))
+    print(sum(calories_by_elf[-3:]))
 
 
 if __name__ == "__main__":
