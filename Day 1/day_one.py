@@ -2,9 +2,9 @@
 from day_one_input import puzzle_input
 
 
-def process_input(puzzle_input: str) -> list:
+def process_input(multiline_input: str) -> list:
     """Process Multi-line input string to list of lists"""
-    return [elf.splitlines() for elf in puzzle_input.split("\n\n")]
+    return [sub_list.splitlines() for sub_list in multiline_input.split("\n\n")]
 
 
 def summarise_entries(lists: list) -> list:
