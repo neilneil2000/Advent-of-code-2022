@@ -1,7 +1,7 @@
 """ Solution to Day 1 Advent of Code 2022"""
 from typing import List
 
-from day_one_input import puzzle_input
+from day_one_input import PUZZLE_INPUT
 
 
 def process_input(multiline_input: str) -> List[List[str]]:
@@ -29,7 +29,7 @@ def sum_highest_values(my_list: List[int], number_of_values: int = 1) -> int:
 
 
 def main():  # pylint:disable=missing-function-docstring
-    food_items_by_elf = process_input(puzzle_input)
+    food_items_by_elf = process_input(PUZZLE_INPUT)
     calories_by_elf = summarise_entries(food_items_by_elf)
 
     # ANSWER TO PART 1

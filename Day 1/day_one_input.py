@@ -1,4 +1,4 @@
-puzzle_input = """4514
+PUZZLE_INPUT = """4514
 8009
 6703
 1811
