@@ -24,32 +24,34 @@ class RockPaperScissors:
     def __init__(self):
         self.score = 0
 
-    def update_score(self, outcome: Outcome, player_choice: Item):
+    def __update_score(self, outcome: Outcome, player_choice: Item):
         """Update the cumulative score based on game outcome and item"""
         self.score += outcome.value + player_choice.value
 
     def play_round(self, player_one: Item, player_two: Item):
         """Play a Round of Rock, Paper, Scissors"""
         if player_one == player_two:
-            return self.update_score(Outcome.DRAW, player_two)
+            return self.__update_score(Outcome.DRAW, player_two)
         if (
             (player_one == Item.ROCK and player_two == Item.PAPER)
             or (player_one == Item.PAPER and player_two == Item.SCISSORS)
             or (player_one == Item.SCISSORS and player_two == Item.ROCK)
         ):
-            return self.update_score(Outcome.WIN, player_two)
-        self.update_score(Outcome.LOSE, player_two)
+            return self.__update_score(Outcome.WIN, player_two)
+        self.__update_score(Outcome.LOSE, player_two)
 
     def play_round_part_2(self, player_one: Item, round_outcome: Outcome):
         """Play a Round of Rock, Paper, Scissors as defined in part 2 of the problem"""
         if round_outcome == Outcome.DRAW:
-            return self.update_score(round_outcome, player_one)
+            return self.__update_score(round_outcome, player_one)
         if round_outcome == Outcome.WIN:
-            return self.update_score(round_outcome, self.item_that_beats(player_one))
-        return self.update_score(round_outcome, self.item_that_loses(player_one))
+            return self.__update_score(
+                round_outcome, self.__item_that_beats(player_one)
+            )
+        return self.__update_score(round_outcome, self.__item_that_loses(player_one))
 
     @staticmethod
-    def item_that_beats(item: Item) -> Item:
+    def __item_that_beats(item: Item) -> Item:
         """Return the item that beats the one provided"""
         if item == Item.ROCK:
             return Item.PAPER
@@ -58,7 +60,7 @@ class RockPaperScissors:
         return Item.ROCK
 
     @staticmethod
-    def item_that_loses(item: Item) -> Item:
+    def __item_that_loses(item: Item) -> Item:
         """Return the item that loses to the one provided"""
         if item == Item.ROCK:
             return Item.SCISSORS
