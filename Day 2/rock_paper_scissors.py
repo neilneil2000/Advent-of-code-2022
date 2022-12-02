@@ -29,13 +29,14 @@ class RockPaperScissors:
         self.score += outcome.value + player_choice.value
 
     def play_round(self, input_a: Enum, input_b: Enum):
+        """Play a Round of Rock, Paper, Scissors"""
         if isinstance(input_b, Item):
             self.__play_round_part_1(input_a, input_b)
             return
         self.__play_round_part_2(input_a, input_b)
 
     def __play_round_part_1(self, player_one: Item, player_two: Item):
-        """Play a Round of Rock, Paper, Scissors"""
+        """Play a Round of Rock, Paper, Scissors using two items"""
         if player_one == player_two:
             return self.__update_score(Outcome.DRAW, player_two)
         if (
@@ -47,7 +48,7 @@ class RockPaperScissors:
         return self.__update_score(Outcome.LOSE, player_two)
 
     def __play_round_part_2(self, player_one: Item, round_outcome: Outcome):
-        """Play a Round of Rock, Paper, Scissors as defined in part 2 of the problem"""
+        """Play a Round of Rock, Paper, Scissors using an item and an outcome"""
         if round_outcome == Outcome.DRAW:
             return self.__update_score(round_outcome, player_one)
         if round_outcome == Outcome.WIN:
