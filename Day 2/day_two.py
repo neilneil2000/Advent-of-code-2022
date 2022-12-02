@@ -88,8 +88,7 @@ class InputProcessor:
             return Item.ROCK
         if encoded_item in cls.PAPER:
             return Item.PAPER
-        if encoded_item in cls.SCISSORS:
-            return Item.SCISSORS
+        return Item.SCISSORS
 
     @classmethod
     def decode_outcome(cls, encoded_item: str) -> Outcome:
@@ -98,8 +97,7 @@ class InputProcessor:
             return Outcome.LOSE
         if encoded_item in cls.DRAW:
             return Outcome.DRAW
-        if encoded_item in cls.WIN:
-            return Outcome.WIN
+        return Outcome.WIN
 
 
 def main():  # pylint:disable=missing-function-docstring
