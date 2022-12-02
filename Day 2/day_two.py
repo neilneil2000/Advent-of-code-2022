@@ -1,28 +1,38 @@
+"""Advent of Code 2022 Day 2 Solution"""
+
 from enum import Enum
 
 from day_two_input import PUZZLE_INPUT
 
 
 class Item(Enum):
+    """Player Items used in Rock, Paper, Scissors and their respective scores"""
+
     ROCK = 1
     PAPER = 2
     SCISSORS = 3
 
 
 class Outcome(Enum):
+    """Game Outcomes in Rock, Paper, Scissors and their respective scores"""
+
     WIN = 6
     DRAW = 3
     LOSE = 0
 
 
 class RockPaperScissors:
+    """Rock, Paper, Scissors Game Emulator"""
+
     def __init__(self):
         self.player_two_score = 0
 
     def update_score(self, outcome: Outcome, player_choice: Item):
+        """Update the cumulative score based on game outcome and item"""
         self.player_two_score += outcome.value + player_choice.value
 
     def play_round(self, player_one: Item, player_two: Item):
+        """Play a Round of Rock, Paper, Scissors"""
         if player_one == player_two:
             return self.update_score(Outcome.DRAW, player_two)
         if (
@@ -34,6 +44,7 @@ class RockPaperScissors:
         self.update_score(Outcome.LOSE, player_two)
 
     def play_round_part_2(self, player_one: Item, round_outcome: Outcome):
+        """Play a Round of Rock, Paper, Scissors as defined in part 2 of the problem"""
         if round_outcome == Outcome.DRAW:
             return self.update_score(round_outcome, player_one)
         if round_outcome == Outcome.WIN:
@@ -42,6 +53,7 @@ class RockPaperScissors:
 
     @staticmethod
     def item_that_beats(item: Item) -> Item:
+        """Return the item that beats the one provided"""
         if item == Item.ROCK:
             return Item.PAPER
         if item == Item.PAPER:
@@ -50,6 +62,7 @@ class RockPaperScissors:
 
     @staticmethod
     def item_that_loses(item: Item) -> Item:
+        """Return the item that loses to the one provided"""
         if item == Item.ROCK:
             return Item.SCISSORS
         if item == Item.PAPER:
@@ -58,6 +71,7 @@ class RockPaperScissors:
 
 
 class InputProcessor:
+    """Processes Puzzle inputs from ASCII to defined Enumerations"""
 
     ROCKS = ("A", "X")
     PAPER = ("B", "Y")
@@ -69,6 +83,7 @@ class InputProcessor:
 
     @classmethod
     def decode_item(cls, encoded_item: str) -> Item:
+        """Return Item Enumeration for ASCII encoded outcome"""
         if encoded_item in cls.ROCKS:
             return Item.ROCK
         if encoded_item in cls.PAPER:
@@ -77,7 +92,8 @@ class InputProcessor:
             return Item.SCISSORS
 
     @classmethod
-    def decode_outcome(cls, encoded_item: str) -> Item:
+    def decode_outcome(cls, encoded_item: str) -> Outcome:
+        """Return Outcome Enumeration for ASCII encoded outcome"""
         if encoded_item in cls.LOSE:
             return Outcome.LOSE
         if encoded_item in cls.DRAW:
@@ -86,7 +102,7 @@ class InputProcessor:
             return Outcome.WIN
 
 
-def main():
+def main():  # pylint:disable=missing-function-docstring
 
     game_one = RockPaperScissors()
     for game_round in PUZZLE_INPUT.splitlines():
