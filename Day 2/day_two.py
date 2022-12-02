@@ -21,7 +21,7 @@ def main():  # pylint:disable=missing-function-docstring
     for player_one, outcome in game_entries:
         player_one = InputProcessor.decode_item(player_one)
         outcome = InputProcessor.decode_outcome(outcome)
-        game_two.play_round_part_2(player_one, outcome)
+        game_two.play_round(player_one, outcome)
 
     # ANSWER TO PART 2
     print(game_two.score)
