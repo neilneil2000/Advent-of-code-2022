@@ -38,7 +38,7 @@ class RockPaperScissors:
             or (player_one == Item.SCISSORS and player_two == Item.ROCK)
         ):
             return self.__update_score(Outcome.WIN, player_two)
-        self.__update_score(Outcome.LOSE, player_two)
+        return self.__update_score(Outcome.LOSE, player_two)
 
     def play_round_part_2(self, player_one: Item, round_outcome: Outcome):
         """Play a Round of Rock, Paper, Scissors as defined in part 2 of the problem"""
