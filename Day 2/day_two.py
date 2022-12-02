@@ -25,11 +25,11 @@ class RockPaperScissors:
     """Rock, Paper, Scissors Game Emulator"""
 
     def __init__(self):
-        self.player_two_score = 0
+        self.score = 0
 
     def update_score(self, outcome: Outcome, player_choice: Item):
         """Update the cumulative score based on game outcome and item"""
-        self.player_two_score += outcome.value + player_choice.value
+        self.score += outcome.value + player_choice.value
 
     def play_round(self, player_one: Item, player_two: Item):
         """Play a Round of Rock, Paper, Scissors"""
@@ -111,7 +111,7 @@ def main():  # pylint:disable=missing-function-docstring
         )
 
     # ANSWER TO PART 1
-    print(game_one.player_two_score)
+    print(game_one.score)
 
     game_two = RockPaperScissors()
     game_entries = [line.split(" ") for line in PUZZLE_INPUT.splitlines()]
@@ -121,7 +121,7 @@ def main():  # pylint:disable=missing-function-docstring
         game_two.play_round_part_2(player_one, outcome)
 
     # ANSWER TO PART 2
-    print(game_two.player_two_score)
+    print(game_two.score)
 
 
 if __name__ == "__main__":
