@@ -106,10 +106,10 @@ def main():  # pylint:disable=missing-function-docstring
 
     game_one = RockPaperScissors()
     for game_round in PUZZLE_INPUT.splitlines():
-        player_one, outcome = game_round.split(" ")
+        player_one, player_two = game_round.split(" ")
         game_one.play_round(
             InputProcessor.decode_item(player_one),
-            InputProcessor.decode_item(outcome),
+            InputProcessor.decode_item(player_two),
         )
 
     # ANSWER TO PART 1
