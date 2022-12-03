@@ -1,4 +1,4 @@
-"""Solution to Advent of Code Day 3"""
+"""Solution to Advent of Code 2022 Day 3"""
 
 from typing import List
 
