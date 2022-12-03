@@ -35,6 +35,8 @@ def bisect_string(string: str) -> List[str]:
 
 def get_packing_priority(rucksack: str) -> str:
     """Return priority for a given rucksack by finding incorrectly packed item"""
+    if isinstance(rucksack, list):
+        rucksack = rucksack[0]
     return score(get_common_letter(bisect_string(rucksack)))
 
 
@@ -53,12 +55,12 @@ def elf_groups(elves_per_group=3) -> List[str]:
 
 def main():  # pylint:disable=missing-function-docstring
     total_priority = 0
-    for rucksack in elf_groups(1)[0]:
+    for rucksack in elf_groups(1):
         total_priority += get_packing_priority(rucksack)
     print(total_priority)
 
     total_priority = 0
-    for group in elf_groups():
+    for group in elf_groups(3):
         total_priority += get_group_priority(group)
     print(total_priority)
 
