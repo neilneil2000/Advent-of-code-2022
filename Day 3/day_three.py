@@ -1,6 +1,6 @@
 """Solution to Advent of Code Day 3"""
 
-from typing import Tuple, List
+from typing import List
 
 from day_three_input import PUZZLE_INPUT
 
