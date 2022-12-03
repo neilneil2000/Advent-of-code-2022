@@ -40,7 +40,7 @@ def get_packing_priority(rucksack: str) -> str:
     return score(get_common_letter(bisect_string(rucksack)))
 
 
-def get_group_priority(group: List[str])-> int:
+def get_group_priority(group: List[str]) -> int:
     """Return priority for group by finding commonly packed item"""
     return score(get_common_letter(group))
 
