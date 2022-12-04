@@ -13,10 +13,7 @@ def process_input() -> List[List[str]]:
 
 def build_elf_list() -> List[List[ElfCleaningAssignment]]:
     """Create list of elf objects"""
-    return [
-        [ElfCleaningAssignment(elf_one), ElfCleaningAssignment(elf_two)]
-        for elf_one, elf_two in process_input()
-    ]
+    return [list(map(ElfCleaningAssignment, elf_pair)) for elf_pair in process_input()]
 
 
 def number_of_subsets(elf_pairs: List[ElfCleaningAssignment]):
