@@ -1,3 +1,5 @@
+"""Elf Cleaning Assignment Class for Day 4 of Advent of Code 2022"""
+
 from __future__ import annotations
 
 
