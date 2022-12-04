@@ -31,12 +31,8 @@ def number_of_overlaps(elf_pairs: List[ElfCleaningAssignment]):
 
 def main():  # pylint:disable=missing-function-docstring
     elf_pairs = build_elf_list()
-    print(
-        f"{number_of_subsets(elf_pairs)} pairs of elves have a complete overlap"
-    )  # PART 1
-    print(
-        f"{number_of_overlaps(elf_pairs)} pairs of elves have some kind of overlap"
-    )  # PART 2
+    print(f"{number_of_subsets(elf_pairs)} pairs of elves have a complete overlap")
+    print(f"{number_of_overlaps(elf_pairs)} pairs of elves have some kind of overlap")
 
 
 if __name__ == "__main__":
