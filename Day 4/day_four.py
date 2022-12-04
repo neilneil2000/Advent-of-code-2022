@@ -35,14 +35,24 @@ def process_input() -> List[List[str]]:
     return [pair.split(",") for pair in PUZZLE_INPUT.splitlines()]
 
 
+def number_of_subsets(elf_pairs):
+    """Return number of pairs with a complete overlap (i.e. one is a subset of the other)"""
+    return sum(elf_one.is_superset_or_subset(elf_two) for elf_one, elf_two in elf_pairs)
+
+
+def number_of_overlaps(elf_pairs):
+    """Return number of pairs with any overlap"""
+    return sum(elf_one.is_overlap(elf_two) for elf_one, elf_two in elf_pairs)
+
+
 def main():  # pylint:disable=missing-function-docstring
     elf_pairs = []
     for elf_one, elf_two in process_input():
         elf_pairs.append(
             [ElfCleaningAssignment(elf_one), ElfCleaningAssignment(elf_two)]
         )
-    print(sum(elf_one.is_superset_or_subset(elf_two) for elf_one, elf_two in elf_pairs))
-    print(sum(elf_one.is_overlap(elf_two) for elf_one, elf_two in elf_pairs))
+    print(number_of_subsets(elf_pairs))  # PART 1
+    print(number_of_overlaps(elf_pairs))  # PART 2
 
 
 if __name__ == "__main__":
