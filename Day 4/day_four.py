@@ -9,16 +9,14 @@ from day_four_input import PUZZLE_INPUT
 class ElfCleaningAssignment:
     """Representation of Cleaning Assignment given to an elf"""
 
-    def __init__(self, definition: str):
+    def __init__(self, sectors: str):
         self.start = 0
         self.end = 0
-        self.__process_definition(definition)
+        self.__process_definition(sectors)
 
-    def __process_definition(self, definition: str):
-        """Process X-Y cleaning definition into areas"""
-        start, end = definition.split("-")
-        self.start = int(start)
-        self.end = int(end)
+    def __process_definition(self, sectors: str):
+        """Process 'X-Y' cleaning definition into sectors"""
+        self.start, self.end = map(int, sectors.split("-"))
 
     def is_superset(self, other):
         """Returns True if self is superset of other"""
