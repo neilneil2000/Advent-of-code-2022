@@ -24,15 +24,19 @@ def number_of_subsets(elf_pairs: List[ElfCleaningAssignment]):
     return sum(elf_one.is_superset_or_subset(elf_two) for elf_one, elf_two in elf_pairs)
 
 
-def number_of_overlaps(elf_pairs:List[ElfCleaningAssignment]):
+def number_of_overlaps(elf_pairs: List[ElfCleaningAssignment]):
     """Return number of pairs with any overlap"""
     return sum(elf_one.is_overlap(elf_two) for elf_one, elf_two in elf_pairs)
 
 
 def main():  # pylint:disable=missing-function-docstring
     elf_pairs = build_elf_list()
-    print(number_of_subsets(elf_pairs))  # PART 1
-    print(number_of_overlaps(elf_pairs))  # PART 2
+    print(
+        f"{number_of_subsets(elf_pairs)} pairs of elves have a complete overlap"
+    )  # PART 1
+    print(
+        f"{number_of_overlaps(elf_pairs)} pairs of elves have some kind of overlap"
+    )  # PART 2
 
 
 if __name__ == "__main__":
