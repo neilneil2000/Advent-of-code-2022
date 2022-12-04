@@ -38,6 +38,14 @@ def process_input() -> List[List[str]]:
     return [pair.split(",") for pair in PUZZLE_INPUT.splitlines()]
 
 
+def build_elf_list() -> List[List[ElfCleaningAssignment]]:
+    """Create list of elf objects"""
+    return [
+        [ElfCleaningAssignment(elf_one), ElfCleaningAssignment(elf_two)]
+        for elf_one, elf_two in process_input()
+    ]
+
+
 def number_of_subsets(elf_pairs):
     """Return number of pairs with a complete overlap (i.e. one is a subset of the other)"""
     return sum(elf_one.is_superset_or_subset(elf_two) for elf_one, elf_two in elf_pairs)
@@ -49,11 +57,7 @@ def number_of_overlaps(elf_pairs):
 
 
 def main():  # pylint:disable=missing-function-docstring
-    elf_pairs = []
-    for elf_one, elf_two in process_input():
-        elf_pairs.append(
-            [ElfCleaningAssignment(elf_one), ElfCleaningAssignment(elf_two)]
-        )
+    elf_pairs = build_elf_list()
     print(number_of_subsets(elf_pairs))  # PART 1
     print(number_of_overlaps(elf_pairs))  # PART 2
 
