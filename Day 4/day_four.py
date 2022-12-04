@@ -18,7 +18,7 @@ class ElfCleaningAssignment:
         """Process 'X-Y' cleaning definition into sectors"""
         self.start, self.end = map(int, sectors.split("-"))
 
-    def is_superset(self, other):
+    def is_superset(self, other: ElfCleaningAssignment):
         """Returns True if self is superset of other"""
         return self.start <= other.start and self.end >= other.end
 
@@ -26,7 +26,7 @@ class ElfCleaningAssignment:
         """Returns True if either class is superset of the other"""
         return self.is_superset(other) or other.is_superset(self)
 
-    def is_overlap(self, other):
+    def is_overlap(self, other: ElfCleaningAssignment):
         """Returns True if there is any overlap between objects"""
         return not (self.start > other.end or self.end < other.start)
 
