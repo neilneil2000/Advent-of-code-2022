@@ -7,6 +7,7 @@ from input_processor import InputProcessor
 
 def main():  # pylint:disable=missing-function-docstring
     instructions = INSTRUCTIONS.splitlines()
+
     elf_crane = CraneMover9000(InputProcessor.process_crate_input(CRATES))
     for instruction in instructions:
         elf_crane.move_crates(instruction)
