@@ -6,7 +6,7 @@ class InputProcessor:
     """Class to Process input from file"""
 
     @classmethod
-    def get_crates(cls, raw_input: str):
+    def process_crate_input(cls, raw_input: str):
         """Return formatted list of crates from input format"""
         crates = cls.__initialise_crate_stack(cls.__number_of_crate_stacks(raw_input))
         crate_stack = raw_input.splitlines()[:-1]
