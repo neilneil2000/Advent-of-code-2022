@@ -20,7 +20,8 @@ class CraneMover9000:
         for _ in range(number_of_crates):
             self.stacks[to_stack].append(self.stacks[from_stack].pop())
 
-    def get_accesible_crates(self):
+    def get_accessible_crates(self):
+        """Return string of top crates"""
         return "".join(stack[-1] for stack in self.stacks[1:])
 
 

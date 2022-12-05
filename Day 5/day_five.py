@@ -11,12 +11,12 @@ def main():  # pylint:disable=missing-function-docstring
     elf_crane = CraneMover9000(InputProcessor.process_crate_input(CRATES))
     for instruction in instructions:
         elf_crane.move_crates(instruction)
-    print(elf_crane.get_accesible_crates())
+    print(elf_crane.get_accessible_crates())
 
     elf_crane = CraneMover9001(InputProcessor.process_crate_input(CRATES))
     for instruction in instructions:
         elf_crane.move_crates(instruction)
-    print(elf_crane.get_accesible_crates())
+    print(elf_crane.get_accessible_crates())
 
 
 if __name__ == "__main__":
