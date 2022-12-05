@@ -9,8 +9,8 @@ class InputProcessor:
     def process_crate_input(cls, raw_input: str):
         """Return formatted list of crates from input format"""
         crates = cls.__initialise_crate_stack(cls.__number_of_crate_stacks(raw_input))
-        crate_stack = raw_input.splitlines()[:-1]
-        for line in crate_stack:
+        crate_stacks = raw_input.splitlines()[:-1]
+        for line in crate_stacks:
             for index, character in enumerate(line):
                 if character in ascii_uppercase:
                     crates[(index - 1) // 4].append(character)
