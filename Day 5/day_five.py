@@ -1,7 +1,7 @@
 from day_five_input import INSTRUCTIONS
 
 
-class Crane:
+class CraneMover9000:
     def __init__(self, stacks: list):
         self.stacks = stacks
         self.stacks.insert(0, [])
@@ -49,7 +49,7 @@ def get_crates():
 
 def main():
     instructions = INSTRUCTIONS.splitlines()
-    elf_crane = Crane(get_crates())
+    elf_crane = CraneMover9000(get_crates())
     for instruction in instructions:
         elf_crane.move_crates(instruction)
     print(elf_crane.get_accesible_crates())
