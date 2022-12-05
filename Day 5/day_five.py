@@ -39,6 +39,7 @@ class CraneMover9001(CraneMover9000):
 
 
 def get_crates():
+    """Return formatted list of crates from input format"""
     crates = [[] for _ in range(9)]
     crate_stack = CRATES.splitlines()
     for line in crate_stack:
@@ -49,7 +50,7 @@ def get_crates():
     return [stack[::-1] for stack in crates]
 
 
-def main():
+def main():  # pylint:disable=missing-function-docstring
     instructions = INSTRUCTIONS.splitlines()
     elf_crane = CraneMover9000(get_crates())
     for instruction in instructions:
