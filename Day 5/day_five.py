@@ -22,6 +22,20 @@ class CraneMover9000:
         return "".join(stack[-1] for stack in self.stacks[1:])
 
 
+class CraneMover9001(CraneMover9000):
+    def move_crates(self, instruction: str):
+        self.__execute_move(*self.__parse_instruction(instruction))
+
+    @staticmethod
+    def __parse_instruction(instruction: str) -> tuple:
+        _, number_of_crates, _, from_stack, _, to_stack = instruction.split()
+        return int(number_of_crates), int(from_stack), int(to_stack)
+
+    def __execute_move(self, number_of_crates: int, from_stack: int, to_stack: int):
+        self.stacks[to_stack].extend(self.stacks[from_stack][-number_of_crates:])
+        self.stacks[from_stack] = self.stacks[from_stack][:-number_of_crates]
+
+
 #        [H]     [W] [B]
 #    [D] [B]     [L] [G] [N]
 # [P] [J] [T]     [M] [R] [D]
@@ -50,6 +64,11 @@ def get_crates():
 def main():
     instructions = INSTRUCTIONS.splitlines()
     elf_crane = CraneMover9000(get_crates())
+    for instruction in instructions:
+        elf_crane.move_crates(instruction)
+    print(elf_crane.get_accesible_crates())
+
+    elf_crane = CraneMover9001(get_crates())
     for instruction in instructions:
         elf_crane.move_crates(instruction)
     print(elf_crane.get_accesible_crates())
