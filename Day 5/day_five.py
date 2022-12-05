@@ -26,7 +26,7 @@ class InputProcessor:
 
     @staticmethod
     def __number_of_crate_stacks(raw_input: str) -> int:
-        return 9
+        return int(raw_input.splitlines()[-1].split()[-1])
 
 
 def main():  # pylint:disable=missing-function-docstring
