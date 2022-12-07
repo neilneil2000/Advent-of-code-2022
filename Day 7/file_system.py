@@ -104,14 +104,14 @@ class FileSystem:
         """Prints file structure to screen"""
         self.root.display(indent_level=0)
 
-    def get_directory_sizes(self):
+    def __get_directory_sizes(self):
         """Return list of all directory sizes"""
         return self.root.get_directory_sizes([])
 
     def smallest_directory_to_delete(self, target_space: int) -> int:
         """Returns size of smallest_directory that can be deleted to generate target_space"""
         space_needed = target_space + self.root.size - self.total_disk_space
-        directory_sizes = sorted(self.get_directory_sizes())
+        directory_sizes = sorted(self.__get_directory_sizes())
         for size in directory_sizes:
             if size > space_needed:
                 return size
