@@ -1,15 +1,17 @@
 "Advent of Code 2022 Day 7 Solution"
-from day_seven_input import PUZZLE_INPUT, EXAMPLE_PUZZLE_INPUT
+from day_seven_input import PUZZLE_INPUT
 from file_system import FileSystem
 
 
 class CommandExecutor:
+    """Module to Execute File System Commands"""
 
     CHANGE_DIRECTORY = "cd"
     LIST_CONTENTS = "ls"
 
     @classmethod
     def run_command(cls, command: str, file_system: FileSystem):
+        """Execute the command to build File Structure"""
         if command == "":
             return
         command, *output = command.splitlines()
@@ -27,13 +29,14 @@ def main():  # pylint:disable=missing-function-docstring
     for command in commands:
         CommandExecutor.run_command(command, elf_device)
 
+    # PART 1
     total = 0
-    directory_sizes = elf_device.get_directory_sizes()
-    for dir_size in directory_sizes:
+    for dir_size in elf_device.get_directory_sizes():
         if dir_size <= 100_000:
             total += dir_size
     print(total)
 
+    # PART 2
     total_disk = 70_000_000
     space_required = 30_000_000
 

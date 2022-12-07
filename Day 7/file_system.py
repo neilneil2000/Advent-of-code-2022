@@ -4,6 +4,8 @@ from typing import Protocol
 
 
 class FileSystemObject(Protocol):
+    """Protocol defining a file system object"""
+
     name: str
     size: int
 
@@ -91,6 +93,7 @@ class FileSystem:
         self.root.display(indent_level=0)
 
     def get_directory_sizes(self):
+        """Return list of all directory sizes"""
         return self.root.get_directory_sizes([])
 
     def smallest_directory_to_delete(self, target_space: int) -> int:
