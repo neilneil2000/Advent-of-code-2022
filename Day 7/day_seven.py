@@ -30,11 +30,7 @@ def main():  # pylint:disable=missing-function-docstring
         CommandExecutor.run_command(command, elf_device)
 
     # PART 1
-    total = 0
-    for dir_size in elf_device.get_directory_sizes():
-        if dir_size <= 100_000:
-            total += dir_size
-    print(total)
+    print(elf_device.sum_directories(exclude_over=100_000))
 
     # PART 2
     total_disk = 70_000_000

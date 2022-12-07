@@ -54,6 +54,16 @@ class Directory:
         for item in self.contents.values():
             item.display(indent_level + 1)
 
+    def sum_directories(self, exclude_over: int):
+        """Return sum of directory sizes that are not of greater size than 'exclude_over'"""
+        total = 0
+        for item in self.contents.values():
+            if isinstance(item, Directory):
+                total += item.sum_directories(exclude_over)
+                if item.size <= exclude_over:
+                    total += item.size
+        return total
+
 
 class FileSystem:
     """Representation of a file system"""
@@ -104,3 +114,6 @@ class FileSystem:
             if size > space_needed:
                 return size
         return 0
+
+    def sum_directories(self, exclude_over: int):
+        return self.root.sum_directories(exclude_over)
