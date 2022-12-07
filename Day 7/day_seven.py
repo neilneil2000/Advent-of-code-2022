@@ -36,11 +36,9 @@ def main():  # pylint:disable=missing-function-docstring
 
     total_disk = 70_000_000
     space_required = 30_000_000
-    current_space = total_disk - directory_sizes[-1]
-    space_to_find = space_required - current_space
-    print(space_to_find)
-    directory_sizes.sort()
-    print(directory_sizes)
+
+    elf_device.total_disk_space = total_disk
+    print(elf_device.smallest_directory_to_delete(space_required))
 
 
 if __name__ == "__main__":
