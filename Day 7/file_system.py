@@ -41,6 +41,7 @@ class Directory:
         self.contents[item.name] = item
 
     def get_directory_sizes(self, sizes: list):
+        """Return list of directory sizes"""
         for item in self.contents.values():
             if isinstance(item, Directory):
                 item.get_directory_sizes(sizes)
@@ -116,4 +117,5 @@ class FileSystem:
         return 0
 
     def sum_directories(self, exclude_over: int):
+        """Get sum of all directories excluding those over a certain size"""
         return self.root.sum_directories(exclude_over)
