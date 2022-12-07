@@ -62,8 +62,8 @@ class Directory:
         for item in self.contents.values():
             if isinstance(item, Directory):
                 total += item.sum_directories(exclude_over)
-                if item.size <= exclude_over:
-                    total += item.size
+        if self.size <= exclude_over:
+            total += self.size
         return total
 
 
