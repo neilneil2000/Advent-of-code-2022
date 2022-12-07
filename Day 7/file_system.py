@@ -18,6 +18,7 @@ class File:
     size: int
 
     def display(self, indent_level: int):
+        """Display file information on screen"""
         print(" " * indent_level, end="")
         print(f"- {self.name} {self.size}")
 
@@ -49,7 +50,7 @@ class Directory:
         return sizes
 
     def display(self, indent_level: int):
-        """Display Directory recursively"""
+        """Display Directory on screen"""
         print(" " * indent_level, end="")
         print(f"- {self.name} (dir) {self.size}")
         for item in self.contents.values():
