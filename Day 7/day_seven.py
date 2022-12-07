@@ -26,13 +26,21 @@ def main():  # pylint:disable=missing-function-docstring
     elf_device = FileSystem()
     for command in commands:
         CommandExecutor.run_command(command, elf_device)
-    # print(elf_device.sum_items(100_000))
+
     total = 0
-    for dir_size in elf_device.get_directory_sizes():
+    directory_sizes = elf_device.get_directory_sizes()
+    for dir_size in directory_sizes:
         if dir_size <= 100_000:
             total += dir_size
     print(total)
-    # elf_device.display()
+
+    total_disk = 70_000_000
+    space_required = 30_000_000
+    current_space = total_disk - directory_sizes[-1]
+    space_to_find = space_required - current_space
+    print(space_to_find)
+    directory_sizes.sort()
+    print(directory_sizes)
 
 
 if __name__ == "__main__":
