@@ -1,3 +1,5 @@
+"""Advent of Code 2022 Day 8"""
+
 from day_eight_input import PUZZLE_INPUT
 
 
