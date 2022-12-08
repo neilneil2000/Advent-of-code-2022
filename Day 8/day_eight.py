@@ -77,7 +77,7 @@ class Grove:
         return trees_visible
 
 
-def main():
+def main():  # pylint:disable=missing-function-docstring
     trees = [list(map(int, list(row))) for row in PUZZLE_INPUT.splitlines()]
     my_grove = Grove(trees)
     print(my_grove.count_visible_trees())
