@@ -13,7 +13,7 @@ class Grove:
         return list(zip(*self.trees))
 
     def __get_tree_lines(self, row_id, column_id) -> list:
-        """Returns list of tree lines and index of tree"""
+        """Returns list of tree lines and relative index of tree"""
         return [
             (self.trees[row_id], column_id),
             (self.trees[row_id][::-1], len(self.trees[row_id]) - 1 - column_id),
