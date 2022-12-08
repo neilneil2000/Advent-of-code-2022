@@ -1,7 +1,9 @@
-from day_eight_input import PUZZLE_INPUT, EXAMPLE_PUZZLE_INPUT
+from day_eight_input import PUZZLE_INPUT
 
 
 class Grove:
+    """Representation of a Grove of Trees"""
+
     def __init__(self, trees: list) -> None:
         self.trees = trees
 
