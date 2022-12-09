@@ -87,7 +87,8 @@ class Rope:
 
 def main():  # pylint:disable=missing-function-docstring
     rows = PUZZLE_INPUT.splitlines()
-    rope = Rope(10)
+    ROPE_SEGMENTS = 10
+    rope = Rope(ROPE_SEGMENTS)
     for row in rows:
         direction, steps = row.split()
         rope.command(direction, int(steps))
