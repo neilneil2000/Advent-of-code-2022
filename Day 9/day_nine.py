@@ -3,7 +3,7 @@ from day_nine_input import PUZZLE_INPUT
 
 
 class Rope:
-    """Model of a rope with n segments"""
+    """Model of a rope of length 'length'"""
 
     def __init__(self, length):
         self.segments = [(0, 0) for _ in range(length)]
@@ -36,36 +36,43 @@ class Rope:
                 new_position = (x - 1, y)
         self.segments[0] = new_position
 
-    def __move_segment(self, segment_number: int):
-        """Update position of specific segment"""
+    def __needs_to_move(self, segment_number: int):
+        """Returns True if segment needs to move"""
         head_x, head_y = self.segments[segment_number - 1]
         tail_x, tail_y = self.segments[segment_number]
 
         x_displacement = abs(head_x - tail_x)
         y_displacement = abs(head_y - tail_y)
 
-        if x_displacement <= 1 and y_displacement <= 1:
+        return x_displacement > 1 or y_displacement > 1
+
+    def __move_segment(self, segment_number: int):
+        """Update position of specific segment"""
+        head_x, head_y = self.segments[segment_number - 1]
+        tail_x, tail_y = self.segments[segment_number]
+
+        if not self.__needs_to_move(segment_number):
             return
 
-        match x_displacement:
-            case 0:
-                new_x = tail_x
-            case 1:
-                new_x = head_x
-            case 2:
-                new_x = (head_x + tail_x) // 2
+        new_x = self.__get_new_position(head_x, tail_x)
+        new_y = self.__get_new_position(head_y, tail_y)
 
-        match y_displacement:
-            case 0:
-                new_y = tail_y
-            case 1:
-                new_y = head_y
-            case 2:
-                new_y = (head_y + tail_y) // 2
+        self.__update_segment_position(segment_number, (new_x, new_y))
 
-        self.segments[segment_number] = (new_x, new_y)
+    def __update_segment_position(self, segment_number, segment_position):
+        """Store new position for segment"""
+        self.segments[segment_number] = segment_position
         if self.__is_segment_tail(segment_number):
-            self.tail_visited_locations.add((new_x, new_y))
+            self.tail_visited_locations.add(segment_position)
+
+    def __get_new_position(self, head, tail):
+        """Return new position of tail on one-dimensional axis given position of head"""
+        match abs(head - tail):
+            case 0:
+                return tail
+            case 1:
+                return head
+        return (head + tail) // 2
 
     def run_command(self, direction: str, steps: int):
         """Execute a command 'steps' number of times in direction"""
