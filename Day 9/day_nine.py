@@ -1,5 +1,5 @@
 """Advent of Code 2022 Day 9 Solution"""
-from day_nine_input import INPUT_2, PUZZLE_INPUT
+from day_nine_input import PUZZLE_INPUT
 
 
 class Rope:
