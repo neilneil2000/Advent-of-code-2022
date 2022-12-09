@@ -1,3 +1,4 @@
+"""Advent of Code 2022 Day 9 Solution"""
 from day_nine_input import INPUT_2, PUZZLE_INPUT
 
 
@@ -56,33 +57,21 @@ class Rope:
         if x_displacement <= 1 and y_displacement <= 1:
             return
 
-        if x_displacement > 1 and y_displacement == 0:
-            new_x = (head_x + tail_x) // 2
-            new_y = tail_y
-        elif x_displacement == 0 and y_displacement > 1:
-            new_x = tail_x
-            new_y = (head_y + tail_y) // 2
-        elif x_displacement > 1 and y_displacement == 1:  # and y=1
-            new_x = (head_x + tail_x) // 2
-            new_y = head_y
-        elif y_displacement > 1 and x_displacement == 1:  # and x=1
-            new_x = head_x
-            new_y = (head_y + tail_y) // 2
-        else:
-            print(f"New case: HEAD:({head_x},{head_y}) TAIL:({tail_x},{tail_y})")
-            if head_x > tail_x:
-                new_x = tail_x + 1
-            elif head_x < tail_x:
-                new_x = tail_x - 1
-            else:
+        match x_displacement:
+            case 0:
                 new_x = tail_x
+            case 1:
+                new_x = head_x
+            case 2:
+                new_x = (head_x + tail_x) // 2
 
-            if head_y > tail_y:
-                new_y = tail_y + 1
-            elif head_y < tail_y:
-                new_y = tail_y - 1
-            else:
+        match y_displacement:
+            case 0:
                 new_y = tail_y
+            case 1:
+                new_y = head_y
+            case 2:
+                new_y = (head_y + tail_y) // 2
 
         self.segments[segment_number] = (new_x, new_y)
         if self.is_segment_tail(segment_number):
@@ -96,7 +85,7 @@ class Rope:
                 self.move_segment(index + 1)
 
 
-def main():
+def main():  # pylint:disable=missing-function-docstring
     rows = PUZZLE_INPUT.splitlines()
     rope = Rope(10)
     for row in rows:
