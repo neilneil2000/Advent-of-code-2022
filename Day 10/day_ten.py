@@ -1,4 +1,5 @@
-from day_ten_input import EXAMPLE_INPUT, PUZZLE_INPUT
+"""Advent of Code 2022"""
+from day_ten_input import PUZZLE_INPUT
 
 class CRT:
     """
@@ -11,23 +12,26 @@ class CRT:
     CRT_WIDTH = 40
     SPRITE_WIDTH = 3
 
+    PIXEL_ON = '#'
+    PIXEL_OFF = ' '
+
     def __init__(self):
         self.pixels=[] #Model pixels as 1D array
 
-    def draw_from_history(self,register_history:list):
+    def draw_from_history(self,register_history:list)-> None:
         """Draw screen output from CPU register history"""
         for index, value in enumerate(register_history):
             if self.is_sprite_visible_here(index, value):
-                self.pixels.append('#')
+                self.pixels.append(self.PIXEL_ON)
             else:
-                self.pixels.append(' ')
+                self.pixels.append(self.PIXEL_OFF)
 
-    def is_sprite_visible_here(self, pixel_index:int, sprite_centre:int):
+    def is_sprite_visible_here(self, pixel_index:int, sprite_centre:int)-> bool:
         """Return True if sprite visible at this location"""
         pixel_row_index = pixel_index % self.CRT_WIDTH
         return pixel_row_index-1 <= sprite_centre <= pixel_row_index+1
 
-    def display_screen(self):
+    def display_screen(self)-> None:
         """Print display to screen"""
         for index, pixel in enumerate(self.pixels):
             if index >= self.CRT_HEIGHT*self.CRT_WIDTH:
@@ -48,29 +52,28 @@ class CPU:
         """Current value in register"""
         return self.register_history[-1]
 
-    def add_to_register(self, new_register_value:int=0):
+    def add_to_register(self, new_register_value:int=0)-> None:
         """Add value to register"""
+        self.clock_cycles+=1
         self.register_history.append(new_register_value+self.register_value)
 
-    def do_noop(self):
+    def do_noop(self)-> None:
         """Execute noop operation"""
-        self.clock_cycles+=1
         self.add_to_register()
 
-    def do_addx(self,V:int):
+    def do_addx(self,V:int)-> None:
         """Execute addx operation"""
         self.do_noop()
-        self.clock_cycles+=1
         self.add_to_register(V)
 
-    def run_command(self, command: str):
+    def run_command(self, command: str)-> None:
         """Run a command"""
-        command = command.split()
-        match command[0]:
+        command_name,*command_args = command.split()
+        match command_name:
             case 'noop':
                 self.do_noop()
             case 'addx':
-                self.do_addx(int(command[1]))
+                self.do_addx(int(command_args[0]))
 
     @property
     def signal_strength(self) -> int:
