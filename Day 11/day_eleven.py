@@ -58,8 +58,6 @@ class InputProcessor:
 
 
 
-
-
 class Monkey:
     """Representation of Monkey with items from backpack"""
 
@@ -93,7 +91,7 @@ class Monkey:
 
     def bored(self):
         """Monkey gets bored of object and reduce object worry level"""
-        self.items[0] = self.items[0] // 3
+        self.items[0] = self.items[0] //3
 
     def next_monkey(self) -> int:
         """Returns number of monkey to pass to"""
@@ -104,7 +102,7 @@ class Monkey:
     def process_items(self) -> list:
         """Process all items currently in possession of monkey"""
         items_to_throw = []
-        for _ in range(len(self.items)):
+        for _ in self.items.copy():
             self.inspect()
             self.bored()
             next_monkey = self.next_monkey()
@@ -115,6 +113,65 @@ class Monkey:
     def receive_item(self, item:int):
         """Receive and item and add to item list"""
         self.items.append(item)
+
+
+
+class CleverMonkey(Monkey):
+    """Monkey that has a clever way of tracking large numbers"""
+
+    def __init__(
+        self,
+        starting_items: list,
+        operation: list,
+        test_divisor: int,
+        true_monkey: int,
+        false_monkey: int,
+    ):
+        super().__init__(starting_items,
+        operation,
+        test_divisor,
+        true_monkey,
+        false_monkey)
+        for index,item in enumerate(self.items.copy()):
+            self.items[index]= self.convert_item_to_distances(item)
+
+    def convert_item_to_distances(self, item):
+        """For each object calculate the additional number before it becomes divisible"""
+        return_dict = {}
+        monkey_divisors = [13,19,11,17,3,7,5,2]
+        #monkey_divisors = [23,19,13,17]
+        for divisor in monkey_divisors:
+            return_dict[divisor] = divisor -(item % divisor)
+        return return_dict
+
+    def next_monkey(self) -> int:
+        """Returns number of monkey to pass to"""
+        if self.items[0][self.test_divisor] % self.test_divisor:
+            return self.false_monkey
+        return self.true_monkey
+
+    def bored(self):
+        pass
+
+    def inspect(self):
+        """Monkey inspects object and applies inspection operation"""
+        self.items_inspected+=1
+        operation, operand = self.inspection_operation
+        if operand == "old":
+            for divisor in self.items[0]:
+                squared = (divisor-self.items[0][divisor])**2
+                self.items[0][divisor]=divisor-(squared % divisor)
+            return
+            
+        match operation:
+            case '*':
+                for divisor in self.items[0]:
+                    self.items[0][divisor]=(self.items[0][divisor]*int(operand))%divisor
+                    
+            case '+':
+                for divisor in self.items[0]:
+                    self.items[0][divisor] = self.items[0][divisor]-int(operand)
+
 
 
 class MonkeyBusiness:
@@ -147,16 +204,27 @@ class MonkeyBusiness:
 
 
 def main():  # pylint:disable=missing-function-docstring
-    number_of_rounds = 20
+    NUMBER_OF_ROUNDS_PART1 = 20
+    NUMBER_OF_ROUNDS_PART2 = 10_000
 
-    puzzle_input = PUZZLE_INPUT.split("\n\n")   
+    puzzle_input = PUZZLE_INPUT.split("\n\n")
+    
 
     monkey_puzzle = MonkeyBusiness()
     # Build Monkeys and add them to monkey_puzzle
     for monkey in puzzle_input:
         monkey_puzzle.add_monkey(Monkey(*InputProcessor.process(monkey)))
 
-    for _ in range(number_of_rounds):
+    for _ in range(NUMBER_OF_ROUNDS_PART1):
+        monkey_puzzle.play_round()
+
+    print(monkey_puzzle.monkey_business_level)
+
+    monkey_puzzle = MonkeyBusiness()
+    for monkey in puzzle_input:
+        monkey_puzzle.add_monkey(CleverMonkey(*InputProcessor.process(monkey)))
+
+    for _ in range(NUMBER_OF_ROUNDS_PART2):
         monkey_puzzle.play_round()
 
     print(monkey_puzzle.monkey_business_level)
