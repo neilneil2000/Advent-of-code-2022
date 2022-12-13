@@ -1,3 +1,5 @@
+"""Advent of Code 2022 Day 13"""
+
 import json
 
 from day_thirteen_input import EXAMPLE_INPUT, PUZZLE_INPUT
@@ -66,6 +68,7 @@ def place_item_in_list(item, sorted_list: list):
 
 
 def sort_list(items: list):
+    """Return sorted version of items list"""
     sorted_list = [items.pop(0)]
     while len(items) > 0:
         sorted_list = place_item_in_list(items.pop(0), sorted_list)
@@ -92,12 +95,14 @@ def main():  # pylint:disable=missing-function-docstring
     for line in PUZZLE_INPUT.splitlines():
         if line:
             packets.append(json.loads(line))
-    DIVIDER_1 = [[2]]
-    DIVIDER_2 = [[6]]
-    packets.append(DIVIDER_1)
-    packets.append(DIVIDER_2)
+    divider_packet_1 = [[2]]
+    divider_packet_2 = [[6]]
+    packets.append(divider_packet_1)
+    packets.append(divider_packet_2)
     sorted_list = sort_list(packets)
-    answer = (sorted_list.index(DIVIDER_1) + 1) * (sorted_list.index(DIVIDER_2) + 1)
+    answer = (sorted_list.index(divider_packet_1) + 1) * (
+        sorted_list.index(divider_packet_2) + 1
+    )
     print(answer)
 
 
