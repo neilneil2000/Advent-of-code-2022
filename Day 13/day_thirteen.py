@@ -50,8 +50,30 @@ def compare_items(item_1, item_2):
     return handle_lists(item_1, item_2)
 
 
-def main():
-    pairs = PUZZLE_INPUT.split("\n\n")
+def get_correct_position(item, sorted_list) -> int:
+    """Returns index of position in sorted_list that item should be inserted"""
+    for index, _ in enumerate(sorted_list):
+        if compare_items(item, sorted_list[index]):
+            return index
+
+    return len(sorted_list)
+
+
+def place_item_in_list(item, sorted_list: list):
+    """Places item in correct position in list"""
+    sorted_list.insert(get_correct_position(item, sorted_list), item)
+    return sorted_list
+
+
+def sort_list(items: list):
+    sorted_list = [items.pop(0)]
+    while len(items) > 0:
+        sorted_list = place_item_in_list(items.pop(0), sorted_list)
+    return sorted_list
+
+
+def main():  # pylint:disable=missing-function-docstring
+    pairs = EXAMPLE_INPUT.split("\n\n")
     results = []
     for pair in pairs:
         left, right = pair.splitlines()
@@ -65,6 +87,18 @@ def main():
         if result:
             total += index + 1
     print(total)
+
+    packets = []
+    for line in PUZZLE_INPUT.splitlines():
+        if line:
+            packets.append(json.loads(line))
+    DIVIDER_1 = [[2]]
+    DIVIDER_2 = [[6]]
+    packets.append(DIVIDER_1)
+    packets.append(DIVIDER_2)
+    sorted_list = sort_list(packets)
+    answer = (sorted_list.index(DIVIDER_1) + 1) * (sorted_list.index(DIVIDER_2) + 1)
+    print(answer)
 
 
 if __name__ == "__main__":
