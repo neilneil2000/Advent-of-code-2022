@@ -83,13 +83,13 @@ def main():  # pylint:disable=missing-function-docstring
         left = json.loads(left)
         right = json.loads(right)
         outcome = compare_items(left, right)
-        print(f"{left} vs {right} : {outcome}")
+        # print(f"{left} vs {right} : {outcome}")
         results.append(outcome)
     total = 0
     for index, result in enumerate(results):
         if result:
             total += index + 1
-    print(total)
+    print(f"Sum of indices: {total}")
 
     packets = []
     for line in PUZZLE_INPUT.splitlines():
@@ -103,7 +103,7 @@ def main():  # pylint:disable=missing-function-docstring
     answer = (sorted_list.index(divider_packet_1) + 1) * (
         sorted_list.index(divider_packet_2) + 1
     )
-    print(answer)
+    print(f"Decoder key for distress signal: {answer}")
 
 
 if __name__ == "__main__":
