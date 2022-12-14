@@ -27,12 +27,14 @@ def get_rock_positions(rock_lines: list):
 
 
 def is_in_abyss(position):
+    """Returns True if sand has fallen into the abyss"""
     MAXIMUM_DEPTH = 166
     _, y = position
     return y > MAXIMUM_DEPTH
 
 
 def get_landing_place(sand_position: tuple, objects: set):
+    """Returns the landing place of the sand"""
     if is_in_abyss(sand_position):
         return (-1, -1)
     x, y = sand_position
@@ -49,6 +51,7 @@ def get_landing_place(sand_position: tuple, objects: set):
 
 
 def get_landing_place_with_floor(sand_position: tuple, objects: set, floor_level: int):
+    """Returns the landing place of the sand in an environment with a floor"""
     x, y = sand_position
     if y == floor_level - 1:
         return sand_position
@@ -65,6 +68,7 @@ def get_landing_place_with_floor(sand_position: tuple, objects: set, floor_level
 
 
 def lowest_rock_position(rocks):
+    """Returns the y co-ordinate of the lowest rock"""
     lowest = 0
     for rock in rocks:
         _, y = rock
