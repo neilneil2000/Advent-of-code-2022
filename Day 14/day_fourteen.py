@@ -1,4 +1,74 @@
+from functools import lru_cache
 from day_fourteen_input import EXAMPLE_INPUT, PUZZLE_INPUT
+
+
+class Cave:
+
+    ENTRY_POINT = (500, 0)  # Point at which sand enters cave
+
+    def __init__(self, rocks: set):
+        self.rocks = rocks
+        self.__floor_level = self.__maximum_depth + 2
+
+    @property
+    def __maximum_depth(self):
+        """Returns the y co-ordinate of the lowest rock"""
+        return max(y for _, y in self.rocks)
+
+    def is_on_floor(self, position: tuple):
+        """Returns true if location is on floor of cave"""
+        _, y = position  # pylint:disable=invalid-name
+        return y == self.__floor_level - 1
+
+    @staticmethod
+    def get_next_positions(current_position: tuple):
+        """Return ordered list of next positions to try"""
+        x, y = current_position  # pylint:disable=invalid-name
+        return [(x, y + 1), (x - 1, y + 1), (x + 1, y + 1)]
+
+    def __get_landing_place_with_floor(self, sand_position: tuple, obstacles: set):
+        """Returns the landing place of the sand in an environment with a floor"""
+        if self.is_on_floor(sand_position):
+            return sand_position
+
+        for position in self.get_next_positions(sand_position):
+            if position not in obstacles:
+                return self.__get_landing_place_with_floor(position, obstacles)
+
+        return sand_position
+
+    def __get_landing_place_with_abyss(self, sand_position: tuple, obstacles: set):
+        """Returns the landing place of the sand in an environment with a floor"""
+        if self.is_on_floor(sand_position):
+            return (-1, -1)
+
+        for position in self.get_next_positions(sand_position):
+            if position not in obstacles:
+                return self.__get_landing_place_with_abyss(position, obstacles)
+
+        return sand_position
+
+    def get_amount_of_sand_before_abyss(self):
+        """Return amount of sand that will collect before it pours into the abyss"""
+        landing_position = (0, 0)
+        sand = set()
+        while landing_position != (-1, -1):
+            landing_position = self.__get_landing_place_with_abyss(
+                sand_position=self.ENTRY_POINT, obstacles=self.rocks | sand
+            )
+            sand.add(landing_position)
+        return len(sand) - 1
+
+    def get_amount_of_sand_before_blocked(self):
+        """Return amount of sand that will collect before the entry point is blocked"""
+        landing_position = (0, 0)
+        sand = set()
+        while landing_position != self.ENTRY_POINT:
+            landing_position = self.__get_landing_place_with_floor(
+                sand_position=self.ENTRY_POINT, obstacles=self.rocks | sand
+            )
+            sand.add(landing_position)
+        return len(sand)
 
 
 def get_rocks_in_line(start, end):
@@ -17,7 +87,7 @@ def get_rocks_in_line(start, end):
 
 
 def get_rock_positions(rock_lines: list):
-    """Returns list of rock positions"""
+    """Returns set of rock positions"""
     rocks = set()
     starting_rock = rock_lines.pop(0)
     for rock_end in rock_lines:
@@ -26,71 +96,18 @@ def get_rock_positions(rock_lines: list):
     return rocks
 
 
-def is_in_abyss(position):
-    """Returns True if sand has fallen into the abyss"""
-    MAXIMUM_DEPTH = 166
-    _, y = position
-    return y > MAXIMUM_DEPTH
-
-
-def get_landing_place(sand_position: tuple, objects: set):
-    """Returns the landing place of the sand"""
-    if is_in_abyss(sand_position):
-        return (-1, -1)
-    x, y = sand_position
-    directly_below = (x, y + 1)
-    if directly_below not in objects:
-        return get_landing_place(directly_below, objects)
-    down_left = (x - 1, y + 1)
-    if down_left not in objects:
-        return get_landing_place(down_left, objects)
-    down_right = (x + 1, y + 1)
-    if down_right not in objects:
-        return get_landing_place(down_right, objects)
-    return sand_position
-
-
-def get_landing_place_with_floor(sand_position: tuple, objects: set, floor_level: int):
-    """Returns the landing place of the sand in an environment with a floor"""
-    x, y = sand_position
-    if y == floor_level - 1:
-        return sand_position
-    directly_below = (x, y + 1)
-    if directly_below not in objects:
-        return get_landing_place_with_floor(directly_below, objects, floor_level)
-    down_left = (x - 1, y + 1)
-    if down_left not in objects:
-        return get_landing_place_with_floor(down_left, objects, floor_level)
-    down_right = (x + 1, y + 1)
-    if down_right not in objects:
-        return get_landing_place_with_floor(down_right, objects, floor_level)
-    return sand_position
-
-
-def lowest_rock_position(rocks):
-    """Returns the y co-ordinate of the lowest rock"""
-    return max(y for _, y in rocks)
-
-
 def main():  # pylint:disable=missing-function-docstring
     puzzle = [line.split(" -> ") for line in PUZZLE_INPUT.splitlines()]
     rocks = set()
     for rock_formation in puzzle:
         line = [tuple(map(int, x.split(","))) for x in rock_formation]
-        # print(line)
         rocks = rocks.union(get_rock_positions(line))
-    # print(rocks)
-    floor_level = lowest_rock_position(rocks) + 2
-    landing_position = (0, 0)
-    sand = set()
-    while landing_position != (500, 0):
-        landing_position = get_landing_place_with_floor(
-            (500, 0), rocks.union(sand), floor_level
-        )
-        sand.add(landing_position)
-    print(len(sand))
 
-    floor_level = 168
+    cave = Cave(rocks)
+    part_one = cave.get_amount_of_sand_before_abyss()
+    print(part_one)
+    part_two = cave.get_amount_of_sand_before_blocked()
+    print(part_two)
 
 
 if __name__ == "__main__":
