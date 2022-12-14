@@ -69,11 +69,7 @@ def get_landing_place_with_floor(sand_position: tuple, objects: set, floor_level
 
 def lowest_rock_position(rocks):
     """Returns the y co-ordinate of the lowest rock"""
-    lowest = 0
-    for rock in rocks:
-        _, y = rock
-        lowest = max(lowest, y)
-    return lowest
+    return max(y for _, y in rocks)
 
 
 def main():  # pylint:disable=missing-function-docstring
