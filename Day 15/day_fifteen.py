@@ -22,11 +22,10 @@ def manhattan_distance(point_a, point_b):
     return abs(point_a[0] - point_b[0]) + abs(point_a[1] - point_b[1])
 
 
-def ruled_out_points_on_line(
-    y_co_ordinate: int, point: tuple, beacon_distance: int
-) -> tuple:
+def ruled_out_points_on_line(y_co_ordinate: int, sensor: tuple, beacon: tuple) -> tuple:
     """Returns tuple of start and finish x co-ordinates along line described by y_co_ordinate where a beacon CANNOT exist"""
-    x, y = point  # pylint:disable=invalid-name
+    x, y = sensor  # pylint:disable=invalid-name
+    beacon_distance = manhattan_distance(sensor, beacon)
     black_spots = ()
     distance = abs(y - y_co_ordinate)
     overlap = beacon_distance - distance
@@ -80,18 +79,19 @@ def compute_tuning_frequency(x_coordinate: int, y_coordinate: int):
     return 4_000_000 * x_coordinate + y_coordinate
 
 
-def main():
+def main():  # pylint:disable=missing-function-docstring
 
     sensors = process_input(PUZZLE_INPUT)
     part_one_row = 2_000_000
     part_two_limit = 4_000_000
     part_one_black_spots = {}
+    gap = None
     print("Input Processed")
+    print("Assessing Lines...")
     for line in range(0, part_two_limit + 1):
         line_black_spots = {}
         for sensor, beacon in sensors.items():
-            sensor_distance = manhattan_distance(sensor, beacon)
-            sensor_black_spots = ruled_out_points_on_line(line, sensor, sensor_distance)
+            sensor_black_spots = ruled_out_points_on_line(line, sensor, beacon)
             if sensor_black_spots:
                 line_black_spots = add_range_to_dictionary(
                     line_black_spots, sensor_black_spots
@@ -99,10 +99,11 @@ def main():
         if line == part_one_row:
             part_one_black_spots = line_black_spots
         gap = find_gap(line_black_spots, 0, part_two_limit + 1)
-        if not line % 100_000:
-            print(f"Line {line} Assessed")
         if gap is not None:
+            print(f"Line {line} Assessed")
             break
+        if not line % 100_000:
+            print(f"Line {line} Assessed", end="\r")
 
     print(count_blocks(part_one_black_spots))
     print(f"x={gap}, y={line}")
