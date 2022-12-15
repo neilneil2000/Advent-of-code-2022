@@ -21,23 +21,7 @@ def manhattan_distance(point_a, point_b):
     return abs(point_a[0] - point_b[0]) + abs(point_a[1] - point_b[1])
 
 
-def ruled_out_points_on_line(y_co_ordinate: int, point: tuple, beacon_distance: int):
-    """Returns set of x co-ordinates along line described by y_co_ordinate where a beacon CANNOT exist"""
-    x, y = point
-    black_spots = set()
-    distance = abs(y - y_co_ordinate)
-    overlap = beacon_distance - distance
-    if overlap < 0:
-        return black_spots
-    black_spots.add(x)
-    for i in range(x, x + overlap + 1):
-        black_spots.add(i)
-    for i in range(x, x - overlap - 1, -1):
-        black_spots.add(i)
-    return black_spots
-
-
-def ruled_out_points_on_line_optimised(
+def ruled_out_points_on_line(
     y_co_ordinate: int, point: tuple, beacon_distance: int
 ) -> tuple:
     """Returns tuple of start and finish x co-ordinates along line described by y_co_ordinate where a beacon CANNOT exist"""
@@ -48,6 +32,7 @@ def ruled_out_points_on_line_optimised(
     if overlap < 0:
         return black_spots
     return (x - overlap, x + overlap)
+
 
 def find_gap(tuple_range: dict, range_start: int, range_end: int):
     """Returns co-ordinate of gap in a range or None if contiguous"""
@@ -86,9 +71,7 @@ def main():
         line_black_spots = {}
         for sensor, beacon in sensors.items():
             sensor_distance = manhattan_distance(sensor, beacon)
-            sensor_black_spots = ruled_out_points_on_line_optimised(
-                line, sensor, sensor_distance
-            )
+            sensor_black_spots = ruled_out_points_on_line(line, sensor, sensor_distance)
             if sensor_black_spots:
                 line_black_spots = add_range_to_dictionary(
                     line_black_spots, sensor_black_spots
