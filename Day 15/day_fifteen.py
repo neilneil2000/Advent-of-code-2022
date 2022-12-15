@@ -13,7 +13,6 @@ def process_input(input_string: str) -> list:
             int(entry[3].split(",")[0]),
             int(entry[4]),
         )
-
     return processed
 
 
@@ -50,6 +49,22 @@ def find_gap(number_line: dict, range_start: int, range_end: int):
     return None
 
 
+def count_blocks(number_line: dict):
+    """number of blocks covered by number line"""
+    lowest = min(number_line)
+    highest = max(number_line.values())
+    missing = 0
+    pointer = lowest
+    for start in sorted(number_line):
+        gap = start - pointer - 1
+        if gap > 0:
+            missing += gap
+            pointer += gap
+        else:
+            pointer = max(pointer, number_line[start])
+    return highest - lowest - missing
+
+
 def add_range_to_dictionary(dictionary: dict, new_range: tuple):
     """Adds new_range to dictionary"""
     start, end = new_range
@@ -68,11 +83,11 @@ def compute_tuning_frequency(x_coordinate: int, y_coordinate: int):
 def main():
 
     sensors = process_input(PUZZLE_INPUT)
-    beacons = set(sensors.values())
     part_one_row = 2_000_000
+    part_two_limit = 4_000_000
     part_one_black_spots = {}
     print("Input Processed")
-    for line in range(0, 4_000_001):
+    for line in range(0, part_two_limit + 1):
         line_black_spots = {}
         for sensor, beacon in sensors.items():
             sensor_distance = manhattan_distance(sensor, beacon)
@@ -83,45 +98,15 @@ def main():
                 )
         if line == part_one_row:
             part_one_black_spots = line_black_spots
-        gap = find_gap(line_black_spots, 0, 4_000_001)
+        gap = find_gap(line_black_spots, 0, part_two_limit + 1)
         if not line % 100_000:
             print(f"Line {line} Assessed")
         if gap is not None:
             break
 
+    print(count_blocks(part_one_black_spots))
     print(f"x={gap}, y={line}")
     print(f"Tuning Frequency is: {compute_tuning_frequency(gap, line)}")
-
-    """ sensors = process_input(EXAMPLE_INPUT)
-    beacons = set(sensors.values())
-    black_spots = []
-    line_of_focus = 10
-    for sensor, beacon in sensors.items():
-        line_black_spots = ruled_out_points_on_line_optimised(
-            line_of_focus, sensor, manhattan_distance(sensor, beacon)
-        )
-        black_spots = merge_ranges(black_spots, line_black_spots)
-
-    for beacon in beacons:
-        x, y = beacon
-        if y == line_of_focus:
-            black_spots.discard(x)
-            print(f"Removed {x}")
-    print(len(black_spots))
-    ideal_set = set(range(0, 4_000_001))
-    pass
-    for line_of_focus in range(0, 4_000_001):
-        for sensor, beacon in sensors.items():
-            black_spots.update(
-                ruled_out_points_on_line(
-                    line_of_focus, sensor, manhattan_distance(sensor, beacon)
-                )
-            )
-        print(f"Row {line_of_focus} Complete")
-        if ideal_set - black_spots:
-            break
-    pass
- """
 
 
 if __name__ == "__main__":
