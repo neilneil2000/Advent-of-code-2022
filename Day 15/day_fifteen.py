@@ -1,3 +1,4 @@
+"""Advent of Code 2022 Day 15 Solution"""
 from functools import lru_cache
 from day_fifteen_input import EXAMPLE_INPUT, PUZZLE_INPUT
 
@@ -18,6 +19,7 @@ def process_input(input_string: str) -> list:
 
 @lru_cache
 def manhattan_distance(point_a, point_b):
+    """Returns Manhattan distance between 2 points"""
     return abs(point_a[0] - point_b[0]) + abs(point_a[1] - point_b[1])
 
 
@@ -25,7 +27,7 @@ def ruled_out_points_on_line(
     y_co_ordinate: int, point: tuple, beacon_distance: int
 ) -> tuple:
     """Returns tuple of start and finish x co-ordinates along line described by y_co_ordinate where a beacon CANNOT exist"""
-    x, y = point
+    x, y = point  # pylint:disable=invalid-name
     black_spots = ()
     distance = abs(y - y_co_ordinate)
     overlap = beacon_distance - distance
@@ -34,17 +36,17 @@ def ruled_out_points_on_line(
     return (x - overlap, x + overlap)
 
 
-def find_gap(tuple_range: dict, range_start: int, range_end: int):
-    """Returns co-ordinate of gap in a range or None if contiguous"""
-    if range_start < min(tuple_range):
+def find_gap(number_line: dict, range_start: int, range_end: int):
+    """Returns first gap in a range or None if contiguous"""
+    if range_start < min(number_line):
         return range_start
-    if range_end > max(tuple_range.values()):
+    if range_end > max(number_line.values()):
         return range_end
     pointer = range_start
-    for start in sorted(tuple_range):
+    for start in sorted(number_line):
         if start > pointer + 1:
             return pointer + 1
-        pointer = max(pointer, tuple_range[start])
+        pointer = max(pointer, number_line[start])
     return None
 
 
@@ -59,6 +61,7 @@ def add_range_to_dictionary(dictionary: dict, new_range: tuple):
 
 
 def compute_tuning_frequency(x_coordinate: int, y_coordinate: int):
+    """Calculate the Tuning Frequency as described in part 2 of the puzzle"""
     return 4_000_000 * x_coordinate + y_coordinate
 
 
@@ -66,6 +69,8 @@ def main():
 
     sensors = process_input(PUZZLE_INPUT)
     beacons = set(sensors.values())
+    part_one_row = 2_000_000
+    part_one_black_spots = {}
     print("Input Processed")
     for line in range(0, 4_000_001):
         line_black_spots = {}
@@ -76,6 +81,8 @@ def main():
                 line_black_spots = add_range_to_dictionary(
                     line_black_spots, sensor_black_spots
                 )
+        if line == part_one_row:
+            part_one_black_spots = line_black_spots
         gap = find_gap(line_black_spots, 0, 4_000_001)
         if not line % 100_000:
             print(f"Line {line} Assessed")
