@@ -50,14 +50,15 @@ class Cave:
 
     def get_amount_of_sand_before_abyss(self):
         """Return amount of sand that will collect before it pours into the abyss"""
-        landing_position = (0, 0)
         sand = set()
-        while landing_position != (-1, -1):
+        while True:
             landing_position = self.__get_landing_place_with_abyss(
                 sand_position=self.ENTRY_POINT, obstacles=self.rocks | sand
             )
+            if landing_position == (-1, -1):
+                break
             sand.add(landing_position)
-        return len(sand) - 1
+        return len(sand)
 
     def get_amount_of_sand_before_blocked(self):
         """Return amount of sand that will collect before the entry point is blocked"""
