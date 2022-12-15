@@ -100,10 +100,10 @@ def main():  # pylint:disable=missing-function-docstring
             part_one_black_spots = line_black_spots
         gap = find_gap(line_black_spots, 0, part_two_limit + 1)
         if gap is not None:
-            print(f"Line {line} Assessed")
+            print(f"{line} Lines Assessed")
             break
         if not line % 100_000:
-            print(f"Line {line} Assessed", end="\r")
+            print(f"{line} Lines Assessed", end="\r")
 
     print(count_blocks(part_one_black_spots))
     print(f"x={gap}, y={line}")
