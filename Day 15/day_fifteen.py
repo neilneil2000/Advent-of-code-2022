@@ -49,21 +49,6 @@ def ruled_out_points_on_line_optimised(
         return black_spots
     return (x - overlap, x + overlap)
 
-
-def is_contiguous(tuple_range: dict, range_start: int, range_end: int):
-    """Returns True if list represents a contiguous range between start and end"""
-    if range_start < min(tuple_range):
-        return False
-    if range_end > max(tuple_range.values()):
-        return False
-    pointer = range_start
-    for start in sorted(tuple_range):
-        if start > pointer + 1:
-            return False
-        pointer = max(pointer, tuple_range[start])
-    return True
-
-
 def find_gap(tuple_range: dict, range_start: int, range_end: int):
     """Returns co-ordinate of gap in a range or None if contiguous"""
     if range_start < min(tuple_range):
