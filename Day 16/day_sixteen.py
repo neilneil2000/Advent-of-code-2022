@@ -68,6 +68,25 @@ def calculate_total_flow(flow_rates: dict, valves_open: dict) -> int:
     return total
 
 
+def calculate_total_flow_for_two(
+    flow_rates: dict, valves_open: dict, valves_open_2: dict
+) -> int:
+    """
+    flow_rates is dictionary of Valve: Rate
+    valves_open is a dictionary of Valve: Time_left when open
+    """
+    combined_valves_open = valves_open_2.copy()
+    for valve_name, valve_time in valves_open.items():
+        if combined_valves_open.get(valve_name) is not None:
+            combined_valves_open[valve_name] = max(
+                valve_time, combined_valves_open[valve_name]
+            )
+        else:
+            combined_valves_open[valve_name] = valve_time
+
+    return calculate_total_flow(flow_rates, combined_valves_open)
+
+
 def max_flow(
     graph: dict,
     valves_open: dict,
@@ -98,24 +117,40 @@ def max_flow(
         final_valves = max_flow(
             graph, new_valves_open, new_time, next_node, best_flow, flow_rates
         )
-        final_positions.extend(final_valves)
+        for final in final_valves:
+            if final not in final_positions:
+                final_positions.append(final)
     return final_positions
 
 
 def max_flow_achievable(graph: dict, valves: dict, time_left: int):
     """Returns maximum flow_rate achievable in given time"""
     final_positions = max_flow(graph, {}, time_left, "AA", 0, valves)
+    print(f"{len(final_positions)} Outcomes found")
+    new_list = []
+    [new_list.append(x) for x in final_positions if x not in new_list]
     best_flow = 0
-    for valves_open in final_positions:
+    for valves_open in new_list:
         best_flow = max(best_flow, calculate_total_flow(valves, valves_open))
     return best_flow
 
 
 def max_flow_achievable_with_helper(graph: dict, valves: dict, time_left: int):
     """Returns maximum flow_rate achievable in given time"""
-    return max_flow_with_elephant(
-        graph, {}, time_left, time_left, "AA", "AA", 0, valves
-    )
+    final_positions = max_flow(graph, {}, time_left, "AA", 0, valves)
+    print(f"{len(final_positions)} Outcomes found")
+    # new_list = []
+    # [new_list.append(x) for x in final_positions if x not in new_list]
+    # print(f"{len(new_list)} unique outcomes found")
+    best_flow = 0
+    for index, valves_open in enumerate(final_positions):
+        for valves_open_2 in final_positions[index + 1 :]:
+            best_flow = max(
+                best_flow,
+                calculate_total_flow_for_two(valves, valves_open, valves_open_2),
+            )
+        print(f"Checked index {index}", end="\r")
+    return best_flow
 
 
 def max_flow_with_elephant(
@@ -184,21 +219,23 @@ def max_flow_with_elephant(
 
 def main():  # pylint:disable=missing-function-docstring
 
-    cave_layout, valve_flow_rates = process_input(EXAMPLE_INPUT)
+    cave_layout, valve_flow_rates = process_input(PUZZLE_INPUT)
 
     simplified_graph = simplify_graph(cave_layout, set(valve_flow_rates.keys()))
 
-    time_until_expiry = 30
-    maximum_flow_rate = max_flow_achievable(
-        simplified_graph, valve_flow_rates, time_until_expiry
-    )
-    print(f"Maximum possible flow rate is {maximum_flow_rate}")
+    print(f"Graph Simplified")
 
-    # time_until_expiry = 26
-    # maximum_flow_rate = max_flow_achievable_with_helper(
+    # time_until_expiry = 30
+    # maximum_flow_rate = max_flow_achievable(
     #    simplified_graph, valve_flow_rates, time_until_expiry
     # )
     # print(f"Maximum possible flow rate is {maximum_flow_rate}")
+
+    time_until_expiry = 26
+    maximum_flow_rate = max_flow_achievable_with_helper(
+        simplified_graph, valve_flow_rates, time_until_expiry
+    )
+    print(f"Maximum possible flow rate is {maximum_flow_rate}")
 
 
 if __name__ == "__main__":
