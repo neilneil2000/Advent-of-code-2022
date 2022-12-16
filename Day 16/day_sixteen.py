@@ -106,14 +106,80 @@ def max_flow_achievable(graph: dict, valves: dict, time_left: int):
     return max_flow(graph, {}, time_left, "AA", 0, valves)
 
 
+def max_flow_achievable_with_helper(graph: dict, valves: dict, time_left: int):
+    """Returns maximum flow_rate achievable in given time"""
+    return max_flow_with_elephant(
+        graph, {}, time_left, time_left, "AA", "AA", 0, valves
+    )
+
+
+def max_flow_with_elephant(
+    graph: dict,
+    valves_open: dict,
+    time_left: int,
+    elephant_time_left: int,
+    current_node: str,
+    current_elephant_node: str,
+    best_flow: int,
+    flow_rates: dict,
+) -> int:
+    """
+    Return dictionary of open valves when timer runs out
+    valves_open is a dictionary of how much time was left when a valve was opened
+    """
+    if time_left <= 1 and elephant_time_left <= 1:
+        return calculate_total_flow(flow_rates, valves_open)
+    if len(valves_open.keys()) == len(graph.keys()) - 1:
+        return calculate_total_flow(flow_rates, valves_open)
+
+    new_valves_open = valves_open.copy()
+    if flow_rates[current_node]:
+        time_left -= 1
+        new_valves_open[current_node] = time_left
+
+    if flow_rates[current_elephant_node]:
+        elephant_time_left -= 1
+        new_valves_open[current_elephant_node] = elephant_time_left
+
+    for next_node in graph[current_node]:
+        if next_node in valves_open:
+            continue
+        for next_elephant_node in graph[current_node]:
+            if next_elephant_node in valves_open:
+                continue
+            if next_elephant_node == next_node:
+                continue
+            new_time = time_left - graph[current_node][next_node]
+            new_elephant_time = time_left - graph[current_node][next_elephant_node]
+
+            flow = max_flow_with_elephant(
+                graph,
+                new_valves_open,
+                new_time,
+                new_elephant_time,
+                next_node,
+                next_elephant_node,
+                best_flow,
+                flow_rates,
+            )
+            best_flow = max(flow, best_flow)
+    return best_flow
+
+
 def main():  # pylint:disable=missing-function-docstring
 
-    cave_layout, valve_flow_rates = process_input(PUZZLE_INPUT)
+    cave_layout, valve_flow_rates = process_input(EXAMPLE_INPUT)
 
     simplified_graph = simplify_graph(cave_layout, set(valve_flow_rates.keys()))
 
-    time_until_expiry = 30
-    maximum_flow_rate = max_flow_achievable(
+    # time_until_expiry = 30
+    # maximum_flow_rate = max_flow_achievable(
+    #    simplified_graph, valve_flow_rates, time_until_expiry
+    # )
+    # print(f"Maximum possible flow rate is {maximum_flow_rate}")
+
+    time_until_expiry = 26
+    maximum_flow_rate = max_flow_achievable_with_helper(
         simplified_graph, valve_flow_rates, time_until_expiry
     )
     print(f"Maximum possible flow rate is {maximum_flow_rate}")
