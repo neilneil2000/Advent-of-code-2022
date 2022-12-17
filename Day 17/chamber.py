@@ -15,6 +15,7 @@ class Chamber:
         self.landed = False
         self.floor = [1 for _ in range(width)]
         self.blocked_spaces = {(x, 0) for x in range(width)}
+        self.heights = [0]
 
     @property
     def landing_zone(self):
@@ -91,6 +92,7 @@ class Chamber:
         if self.is_blocked_down():
             self.landed = True
             self.update_landing_zone()
+            self.heights.append(max(self.floor) - 1)
             return
         self.current_block.move_down()
 
