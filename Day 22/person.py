@@ -1,4 +1,5 @@
 from grove import Grove
+from cube_grove import CubeGrove
 
 
 class Walker:
@@ -9,7 +10,7 @@ class Walker:
         "R": {"R": "D", "D": "L", "L": "U", "U": "R"},
     }
 
-    def __init__(self, grove: Grove, directions: list) -> None:
+    def __init__(self, grove: CubeGrove, directions: list) -> None:
         self.grove = grove
         self.directions = directions
         self.location = self.get_starting_point()
@@ -40,22 +41,19 @@ class Walker:
         """"""
         self.orientation = self.TURNS[turn_instruction][self.orientation]
 
-    def try_next_forward_step(self) -> str:
+    def try_next_forward_step(self) -> tuple:
         """
         Move forward one space and update location
         Returns location after doing step
         If cannot move then location returned will be current location
         """
-        next_location = self.get_next_location()
-        square = self.grove.get_square_content(next_location)
-        while square == " ":
-            next_location = self.grove.get_next_location(
-                next_location, self.orientation
-            )
-            square = self.grove.get_square_content(next_location)
-        if square == ".":
-            return next_location
-        return self.location
+        next_location, new_orientation = self.grove.get_location_and_orientation(
+            self.location, self.orientation
+        )
+        if self.grove.get_square_content(next_location) == "#":
+            return self.location
+        self.orientation = new_orientation
+        return next_location
 
     def get_next_location(self) -> tuple:
         x, y = self.location

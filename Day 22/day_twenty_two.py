@@ -1,5 +1,6 @@
 from day_twenty_two_input import EXAMPLE_INPUT, PUZZLE_INPUT
 from grove import Grove
+from cube_grove import CubeGrove
 from person import Walker
 
 
@@ -33,10 +34,15 @@ def parse_input(input_string):
 
 def main():
     layout, directions = parse_input(PUZZLE_INPUT)
-    starfruit_grove = Grove(layout)
-    me = Walker(starfruit_grove, directions)
-    me.follow_directions()
-    print(me.password())
+    # starfruit_grove = Grove(layout)
+    # me = Walker(starfruit_grove, directions)
+    # me.follow_directions()
+    # print(me.password())
+
+    starfruit_cube = CubeGrove(layout)
+    me_two = Walker(starfruit_cube, directions)
+    me_two.follow_directions()
+    print(me_two.password())
 
 
 if __name__ == "__main__":
