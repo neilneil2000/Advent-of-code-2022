@@ -9,7 +9,7 @@ class Game:
         self.game_time = game_time
         self.index = index
         self.costs = blueprint
-        self.maximum_rates = {
+        self.maxima = {
             "ore": max(self.costs[x]["ore"] for x in self.costs),
             "clay": self.costs["obsidian"]["clay"],
             "obsidian": self.costs["geode"]["obsidian"],
@@ -18,35 +18,45 @@ class Game:
         print(f"Game {self.index} created:")
         print(f"Blueprint: {self.costs}")
         print(
-            f"Maximums: Ore-{self.maximum_rates['ore']}, Clay-{self.maximum_rates['clay']}, Obsidian-{self.maximum_rates['obsidian']}"
+            f"Maximums: Ore-{self.maxima['ore']}, Clay-{self.maxima['clay']}, Obsidian-{self.maxima['obsidian']}"
         )
 
     def collect(self, resources: dict, robots: dict):
-        """Spend time collecting resources"""
+        """Update resources"""
         for resource in resources:
             resources[resource] += robots[resource]
 
-
     def build_robot(self, resources: dict, robots: dict, robot_type: str):
-        """Increase number of robots"""
-        if robots[robot_type] >= self.maximum_rates[robot_type]:
+        """Build a robot of robot_type"""
+        if robots[robot_type] >= self.maxima[robot_type]:
             return False  # Don't bother going over maximum useful
         for resource in self.costs[robot_type]:
             resources[resource] -= self.costs[robot_type][resource]
         robots[robot_type] += 1
-        for resource in resources.values():
-            if resource < 0:
+        for resource_amount in resources.values():
+            if resource_amount < 0:
                 return False
         return True
 
+    @staticmethod
+    def triangular(n: int):
+        """Return nth triangular number"""
+        return (n * (n + 1)) / 2
 
-    def is_worth_saving(self, resources: dict, robots: dict) -> bool:
+    def is_worth_saving(self, resources: dict, robots: dict, time_left: int) -> bool:
         """Returns True if it could be worth saving up this round"""
-        if robots["ore"] >= self.maximum_rates["ore"]:
+        if time_left <= 2:
+            return False  # No point building next time so spend now or don't bother
+        if robots["ore"] >= self.maxima["ore"]:
+            return False  # Generating ore as fast as I can spend it
+
+        # If i will never save up enough for another geode it is not worth saving
+        if self.costs["geode"]["obsidian"] > resources["obsidian"] + self.triangular(
+            time_left - 2
+        ) - self.triangular(robots["obsidian"]):
             return False
-        if resources["ore"] < self.maximum_rates["ore"]:
-            return True
-        return False
+
+        return True
 
     def take_turn(
         self,
@@ -62,26 +72,30 @@ class Game:
         match to_do:
             case "ore" | "clay" | "obsidian" | "geode":
                 if not self.build_robot(resources, robots, to_do):
-                    return -1
+                    return -1  # This route is a failure
                 self.collect(resources, robots)
                 resources[to_do] -= 1  # Take account of robot that was just built
             case _:
                 self.collect(resources, robots)
+
         results = []
         for next_step in ["geode", "obsidian", "clay", "ore"]:
-            results.append(
-                self.take_turn(
-                    resources.copy(), robots.copy(), time_left - 1, next_step
-                )
+            result = self.take_turn(
+                resources=resources.copy(),
+                robots=robots.copy(),
+                time_left=time_left - 1,
+                to_do=next_step,
             )
-        if max(results) == -1:  # i.e. nothing could be built
-            results.append(
-                self.take_turn(resources.copy(), robots.copy(), time_left - 1, "save")
+            results.append(result)
+
+        if max(results) == -1 or self.is_worth_saving(resources, robots, time_left):
+            result = self.take_turn(
+                resources=resources.copy(),
+                robots=robots.copy(),
+                time_left=time_left - 1,
+                to_do="save",
             )
-        elif self.is_worth_saving(resources, robots):
-            results.append(
-                self.take_turn(resources.copy(), robots.copy(), time_left - 1, "save")
-            )
+            results.append(result)
         return max(results)
 
     def run_game(self) -> int:
@@ -121,7 +135,7 @@ def parse_input(puzzle_input: str):
 
 
 def main():  # pylint:disable=missing-function-docstring
-    blueprints = parse_input(PUZZLE_INPUT)
+    blueprints = parse_input(EXAMPLE_INPUT)
     total = 0
     for index, blueprint in blueprints.items():
         start = perf_counter()
